@@ -1,28 +1,15 @@
-/**
- * Seção Hero – Banner principal do site do Dr. Samuel Holder
- *
- * Primeira impressão do visitante: título de impacto, subtítulo,
- * dois CTAs (WhatsApp e "Saiba Mais"), e uma barra de estatísticas.
- * Usa gradiente azul profundo como fundo + imagem do médico.
- */
-
 import { motion } from 'motion/react';
 import { ArrowDown, Award, Calendar, MapPin, Star } from 'lucide-react';
 import { Button } from '../ui/button';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import type { ReactNode } from 'react';
 import drSamuelhome from '@/imports/Perfilhome.PNG';
+import { WHATSAPP_URL } from '../../constants';
 
 // ══════════════════════════════
-// CONSTANTES
+// DADOS
 // ══════════════════════════════
 
-const WHATSAPP_NUMBER = '5511947191129';
-const WHATSAPP_MSG = encodeURIComponent(
-  'Olá, Dr. Samuel! Gostaria de agendar uma consulta.'
-);
-
-/** Estatísticas exibidas na barra inferior do Hero */
 interface Stat {
   icon: ReactNode;
   value: string;
@@ -33,7 +20,7 @@ const STATS: Stat[] = [
   { icon: <Award className="w-5 h-5" />, value: '+10 anos', label: 'de experiência' },
   { icon: <Calendar className="w-5 h-5" />, value: '+1.000', label: 'pacientes atendidos' },
   { icon: <MapPin className="w-5 h-5" />, value: '3', label: 'locais de atendimento' },
-  { icon: <Star className="w-5 h-5" />, value: '4.9★', label: 'no Doctoralia' },
+  { icon: <Star className="w-5 h-5" />, value: '5.0★', label: 'no Doctoralia' },
 ];
 
 // ══════════════════════════════
@@ -50,12 +37,10 @@ export function Hero() {
       id="inicio"
       className="relative min-h-screen flex flex-col justify-center overflow-hidden"
     >
-      {/* ── FUNDO GRADIENTE AZUL MÉDICO ── */}
+      {/* Fundo gradiente */}
       <div
         className="absolute inset-0 z-0"
-        style={{
-          background: 'linear-gradient(135deg, #1e2966 0%, #1558a3 50%, #1d4ed8 100%)',
-        }}
+        style={{ background: 'linear-gradient(135deg, #1e2966 0%, #1558a3 50%, #1d4ed8 100%)' }}
       />
 
       {/* Padrão de pontos decorativo */}
@@ -67,7 +52,7 @@ export function Hero() {
         }}
       />
 
-      {/* Forma circular decorativa */}
+      {/* Formas decorativas */}
       <div className="absolute -right-32 -top-32 w-[600px] h-[600px] rounded-full bg-blue-400/10 z-0" />
       <div className="absolute -left-24 -bottom-24 w-[400px] h-[400px] rounded-full bg-blue-800/30 z-0" />
 
@@ -86,11 +71,11 @@ export function Hero() {
             >
               <span className="w-2 h-2 rounded-full bg-[#34d399] animate-pulse" />
               <span className="text-sm font-medium text-blue-100" style={{ fontFamily: "'Inter', sans-serif" }}>
-                Endocrinologista • Especialista em Emagrecimento & Diabetes
+                Endocrinologista · Especialista em Emagrecimento & Diabetes
               </span>
             </motion.div>
 
-            {/* Título principal */}
+            {/* Título */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -113,8 +98,8 @@ export function Hero() {
               className="text-lg md:text-xl text-blue-100 leading-relaxed mb-8 max-w-xl"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
-             Tratamento médico personalizado para quem busca emagrecer com acompanhamento médico personalizado e sustentável, controle do diabetes e equilíbrio hormonal.
-          
+              Acompanhamento médico personalizado e sustentável para emagrecimento,
+              controle do diabetes e equilíbrio hormonal.
             </motion.p>
 
             {/* CTAs */}
@@ -124,14 +109,8 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <a
-                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MSG}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button
-                  className="bg-[#059669] hover:bg-[#047857] text-white text-base px-8 py-4 h-auto rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5 active:scale-95 min-h-[52px]"
-                >
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+                <Button className="bg-[#059669] hover:bg-[#047857] text-white text-base px-8 py-4 h-auto rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5 active:scale-95 min-h-[52px]">
                   📱 Agendar Consulta pelo WhatsApp
                 </Button>
               </a>
@@ -163,46 +142,50 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* ── LADO DIREITO: FOTO DO MÉDICO ── */}
+          {/* ── LADO DIREITO: FOTO ── */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
             className="hidden lg:flex justify-center items-end relative"
           >
-            {/* Cartão flutuante de avaliação */}
+            {/* Cartão flutuante: avaliação */}
             <div className="absolute top-8 -left-4 bg-white rounded-2xl shadow-2xl p-4 z-20">
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center gap-1 mb-1">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                 ))}
               </div>
-              <p className="text-xs font-semibold text-gray-800" style={{ fontFamily: "'Inter', sans-serif" }}>4.8 no Doctoralia</p>
-              <p className="text-xs text-gray-500" style={{ fontFamily: "'Inter', sans-serif" }}>+32 avaliações</p>
+              <p className="text-xs font-semibold text-gray-800" style={{ fontFamily: "'Inter', sans-serif" }}>
+                5.0 no Doctoralia
+              </p>
+              <p className="text-xs text-gray-500" style={{ fontFamily: "'Inter', sans-serif" }}>
+                +32 avaliações
+              </p>
             </div>
 
-            {/* Cartão flutuante de pacientes */}
+            {/* Cartão flutuante: pacientes */}
             <div className="absolute bottom-12 -right-4 bg-white rounded-2xl shadow-2xl p-4 z-20">
-              <p className="text-2xl font-bold text-[#1558a3]" style={{ fontFamily: "'Playfair Display', serif" }}>+1.000</p>
-              <p className="text-xs text-gray-500" style={{ fontFamily: "'Inter', sans-serif" }}>pacientes atendidos</p>
+              <p className="text-2xl font-bold text-[#1558a3]" style={{ fontFamily: "'Playfair Display', serif" }}>
+                +1.000
+              </p>
+              <p className="text-xs text-gray-500" style={{ fontFamily: "'Inter', sans-serif" }}>
+                pacientes atendidos
+              </p>
             </div>
 
-            {/* Imagem do médico */}
+            {/* Foto do médico */}
             <div className="relative w-80 h-96 rounded-3xl overflow-hidden shadow-2xl border-4 border-white/20">
               <ImageWithFallback
                 src={drSamuelhome}
                 alt="Dr. Samuel Holder - Endocrinologista"
                 className="w-full h-full object-cover object-top"
               />
-              {/* Gradiente suave no rodapé da imagem */}
               <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-[#1558a3]/60 to-transparent" />
             </div>
           </motion.div>
         </div>
       </div>
-
-      {/* ── BARRA DE ESTATÍSTICAS ── */}
-      
     </section>
   );
 }

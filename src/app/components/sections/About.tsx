@@ -6,9 +6,8 @@
  * bio e diferenciais à direita.
  */
 
-import { VideoCall } from '@mui/icons-material';
 import { motion } from 'motion/react';
-import { GraduationCap, Heart, Microscope, Telescope, Users, Video } from 'lucide-react';
+import { GraduationCap, Microscope, Users, Video } from 'lucide-react';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import drSamuelSobre from '@/imports/Perfilsobre.PNG'
 
