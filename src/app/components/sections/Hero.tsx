@@ -57,19 +57,19 @@ export function Hero() {
       <div className="absolute -left-24 -bottom-24 w-[400px] h-[400px] rounded-full bg-blue-800/30 z-0" />
 
       {/* ── CONTEÚDO PRINCIPAL ── */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 lg:pt-32 lg:pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-8 pt-28 pb-12 lg:pt-32 lg:pb-24 min-h-screen lg:min-h-0 flex items-center lg:block">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
           {/* ── LADO ESQUERDO: TEXTO ── */}
-          <div className="text-white">
+          <div className="text-white text-center lg:text-left flex flex-col items-center lg:items-start">
             {/* Badge de especialidade */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-6"
+              className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-8"
             >
-              <span className="w-2 h-2 rounded-full bg-[#34d399] animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-[#34d399] animate-pulse shrink-0" />
               <span className="text-sm font-medium text-blue-100" style={{ fontFamily: "'Inter', sans-serif" }}>
                 Endocrinologista · Especialista em Emagrecimento & Diabetes
               </span>
@@ -80,7 +80,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white leading-tight mb-6"
+              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white leading-tight mb-8"
               style={{ fontFamily: "'Playfair Display', serif" }}
             >
               Saúde Hormonal
@@ -95,7 +95,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-lg md:text-xl text-blue-100 leading-relaxed mb-8 max-w-xl"
+              className="text-lg md:text-xl text-blue-100 leading-relaxed mb-10 max-w-sm mx-auto lg:mx-0 lg:max-w-xl"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
               Acompanhamento médico personalizado e sustentável para emagrecimento,
@@ -107,16 +107,16 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-col sm:flex-row gap-4"
+              className="w-full flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start mb-10"
             >
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-                <Button className="bg-[#059669] hover:bg-[#047857] text-white text-base px-8 py-4 h-auto rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5 active:scale-95 min-h-[52px]">
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                <Button className="w-full bg-[#059669] hover:bg-[#047857] text-white text-base px-8 py-4 h-auto rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5 active:scale-95 min-h-[56px]">
                   📱 Agendar Consulta pelo WhatsApp
                 </Button>
               </a>
               <button
                 onClick={scrollToAbout}
-                className="flex items-center justify-center gap-2 border-2 border-white/40 text-white px-8 py-4 rounded-xl font-medium text-base hover:bg-white/10 transition-all duration-300 min-h-[52px]"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 border-2 border-white/40 text-white px-8 py-4 rounded-xl font-medium text-base hover:bg-white/10 transition-all duration-300 min-h-[56px]"
               >
                 Conhecer o Dr. Samuel
                 <ArrowDown className="w-4 h-4" />
@@ -128,7 +128,7 @@ export function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="mt-8 flex flex-wrap gap-3"
+              className="flex flex-wrap justify-center lg:justify-start gap-3"
             >
               {['São Paulo', 'Porto Velho', 'TeleMedicina'].map((local) => (
                 <span
