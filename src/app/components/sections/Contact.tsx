@@ -1,26 +1,31 @@
-/**
- * Seção Contato – Formulário de agendamento e informações de contato
- *
- * Inclui:
- * - Formulário com react-hook-form (nome, email, telefone, especialidade, mensagem)
- * - Botão WhatsApp em destaque
- * - Cards com os 4 locais de atendimento
- * - Dados de contato (email, telefone, redes sociais)
- */
-
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'motion/react';
 import {
   Phone, Mail, MapPin, Instagram, Linkedin,
-  Send, CheckCircle, Clock, Calendar,
+  Send, CheckCircle, Clock, Calendar, MessageSquare,
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '../ui/dialog';
 import { cn } from '../ui/utils';
 import type { ReactNode } from 'react';
+import {
+  WHATSAPP_NUMBER,
+  WHATSAPP_URL,
+  WHATSAPP_PHONE_DISPLAY,
+  EMAIL,
+  INSTAGRAM_URL,
+  LINKEDIN_URL,
+} from '../../constants';
 
 // ══════════════════════════════
 // TIPOS
@@ -38,11 +43,10 @@ interface ContactFormData {
 // DADOS ESTÁTICOS
 // ══════════════════════════════
 
-/** Locais de atendimento */
 const LOCATIONS = [
   {
     name: 'São Paulo - SP',
-    address: 'Shooping top center - Avenida Paulista, 2064, 21 andar, Bela Vista, São Paulo',
+    address: 'Shopping Top Center — Av. Paulista, 2064, 21° andar, Bela Vista',
     type: 'Consultório Particular',
     color: '#f0fdf4',
     border: '#bbf7d0',
@@ -58,7 +62,7 @@ const LOCATIONS = [
   },
   {
     name: 'Hospital São Camilo',
-    address: 'Ipiranga, São Paulo – SP',
+    address: 'Ipiranga — São Paulo, SP',
     type: 'Hospital de Referência',
     color: '#eff6ff',
     border: '#bfdbfe',
@@ -66,15 +70,13 @@ const LOCATIONS = [
   },
   {
     name: 'Hospital 9 de Julho',
-    address: 'Jardins, São Paulo – SP',
+    address: 'Jardins — São Paulo, SP',
     type: 'Hospital de Referência',
     color: '#eff6ff',
     border: '#bfdbfe',
     icon: '🏥',
   },
 ];
-
-const WHATSAPP_NUMBER = '5569993522957';
 
 const SPECIALTIES = [
   'Emagrecimento Médico',
@@ -88,11 +90,41 @@ const SPECIALTIES = [
 ];
 
 // ══════════════════════════════
+// HELPERS
+// ══════════════════════════════
+
+function buildWhatsAppURL(data: ContactFormData): string {
+  const lines = [
+    `Olá, Dr. Samuel! Meu nome é ${data.name}.`,
+    `E-mail: ${data.email}`,
+    `Telefone: ${data.phone}`,
+    data.specialty ? `Motivo: ${data.specialty}` : '',
+    data.message ? `Mensagem: ${data.message}` : '',
+  ].filter(Boolean);
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join('\n'))}`;
+}
+
+function buildMailtoURL(data: ContactFormData): string {
+  const subject = encodeURIComponent(`Consulta - ${data.name}`);
+  const lines = [
+    `Nome: ${data.name}`,
+    `E-mail: ${data.email}`,
+    `Telefone: ${data.phone}`,
+    data.specialty ? `Motivo: ${data.specialty}` : '',
+    data.message ? `\nMensagem:\n${data.message}` : '',
+  ].filter(Boolean);
+  const body = encodeURIComponent(lines.join('\n'));
+  return `mailto:${EMAIL}?subject=${subject}&body=${body}`;
+}
+
+// ══════════════════════════════
 // COMPONENTE
 // ══════════════════════════════
 
 export function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [pendingData, setPendingData] = useState<ContactFormData | null>(null);
+  const [showDialog, setShowDialog] = useState(false);
 
   const {
     register,
@@ -101,24 +133,26 @@ export function Contact() {
     formState: { errors, isSubmitting },
   } = useForm<ContactFormData>();
 
-  // Simula envio do formulário (integrar backend/emailjs futuramente)
-  const onSubmit = async (data: ContactFormData) => {
-    // Simula delay de rede
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-    // Monta mensagem para WhatsApp como fallback
-    const msg = encodeURIComponent(
-      `Olá, Dr. Samuel! Meu nome é ${data.name}.\nEmail: ${data.email}\nTelefone: ${data.phone}\nEspecialidade: ${data.specialty}\nMensagem: ${data.message}`
-    );
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
+  // Ao validar o formulário, abre o dialog de escolha
+  const onSubmit = (data: ContactFormData) => {
+    setPendingData(data);
+    setShowDialog(true);
+  };
+
+  // Chamado diretamente pelo clique no botão — sem delay, evita bloqueio do browser
+  const handleSend = (channel: 'whatsapp' | 'email') => {
+    if (!pendingData) return;
+    const url = channel === 'whatsapp'
+      ? buildWhatsAppURL(pendingData)
+      : buildMailtoURL(pendingData);
+    window.open(url, '_blank');
+    setShowDialog(false);
     setSubmitted(true);
     reset();
   };
 
   return (
-    <section
-      id="contato"
-      className="py-16 md:py-24 lg:py-32 bg-gray-50"
-    >
+    <section id="contato" className="py-16 md:py-24 lg:py-32 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── CABEÇALHO ── */}
@@ -131,24 +165,15 @@ export function Contact() {
         >
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="h-px w-12 bg-[#1558a3]" />
-            <span
-              className="text-sm font-semibold text-[#1558a3] uppercase tracking-widest"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
+            <span className="text-sm font-semibold text-[#1558a3] uppercase tracking-widest" style={{ fontFamily: "'Inter', sans-serif" }}>
               Agende sua Consulta
             </span>
             <div className="h-px w-12 bg-[#1558a3]" />
           </div>
-          <h2
-            className="text-3xl md:text-4xl lg:text-5xl text-[#1e2966] mb-4"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
+          <h2 className="text-3xl md:text-4xl lg:text-5xl text-[#1e2966] mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
             Entre em Contato
           </h2>
-          <p
-            className="text-lg text-gray-600 max-w-xl mx-auto"
-            style={{ fontFamily: "'Inter', sans-serif" }}
-          >
+          <p className="text-lg text-gray-600 max-w-xl mx-auto" style={{ fontFamily: "'Inter', sans-serif" }}>
             Dê o primeiro passo para uma vida mais saudável.
             Agende sua consulta hoje mesmo.
           </p>
@@ -156,16 +181,16 @@ export function Contact() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
-          {/* ── COLUNA ESQUERDA: FORMULÁRIO ── */}
+          {/* ── COLUNA ESQUERDA: CTA + FORMULÁRIO ── */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            {/* CTA WhatsApp em destaque */}
+            {/* CTA WhatsApp direto */}
             <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Olá, Dr. Samuel! Gostaria de agendar uma consulta.')}`}
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-4 bg-[#059669] hover:bg-[#047857] text-white rounded-2xl p-5 mb-6 shadow-lg transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.98] group"
@@ -174,17 +199,11 @@ export function Contact() {
                 <Phone className="w-6 h-6" />
               </div>
               <div>
-                <p
-                  className="font-bold text-lg"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
-                >
+                <p className="font-bold text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>
                   Agendar pelo WhatsApp
                 </p>
-                <p
-                  className="text-green-100 text-sm"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                >
-                  (69) 99352-2957 · Resposta rápida
+                <p className="text-green-100 text-sm" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  {WHATSAPP_PHONE_DISPLAY} · Resposta rápida
                 </p>
               </div>
               <div className="ml-auto">
@@ -192,23 +211,15 @@ export function Contact() {
               </div>
             </a>
 
-            {/* Formulário */}
+            {/* Formulário ou tela de sucesso */}
             {submitted ? (
-              // Feedback de sucesso
               <div className="bg-white rounded-2xl p-8 border border-green-200 text-center shadow-sm">
                 <CheckCircle className="w-12 h-12 text-[#059669] mx-auto mb-3" />
-                <h3
-                  className="text-xl font-bold text-gray-800 mb-2"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
-                >
+                <h3 className="text-xl font-bold text-gray-800 mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
                   Mensagem enviada!
                 </h3>
-                <p
-                  className="text-sm text-gray-600 mb-4"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                >
-                  Sua mensagem foi enviada via WhatsApp.
-                  Retornaremos em breve para confirmar o agendamento.
+                <p className="text-sm text-gray-600 mb-4" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  Sua mensagem foi encaminhada. Retornaremos em breve para confirmar o agendamento.
                 </p>
                 <Button
                   variant="outline"
@@ -224,20 +235,13 @@ export function Contact() {
                 className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm space-y-4"
                 noValidate
               >
-                <p
-                  className="text-sm font-semibold text-gray-700 mb-4"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                >
+                <p className="text-sm font-semibold text-gray-700 mb-4" style={{ fontFamily: "'Inter', sans-serif" }}>
                   Ou preencha o formulário abaixo:
                 </p>
 
                 {/* Nome */}
                 <div className="space-y-1.5">
-                  <Label
-                    htmlFor="name"
-                    className="text-sm font-medium text-gray-700"
-                    style={{ fontFamily: "'Inter', sans-serif" }}
-                  >
+                  <Label htmlFor="name" className="text-sm font-medium text-gray-700" style={{ fontFamily: "'Inter', sans-serif" }}>
                     Nome completo <span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -255,7 +259,7 @@ export function Contact() {
                   )}
                 </div>
 
-                {/* Email + Telefone (lado a lado) */}
+                {/* Email + Telefone */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <Label htmlFor="email" className="text-sm font-medium text-gray-700" style={{ fontFamily: "'Inter', sans-serif" }}>
@@ -338,17 +342,8 @@ export function Contact() {
                   disabled={isSubmitting}
                   className="w-full bg-[#1558a3] hover:bg-[#1e3a8a] text-white h-11 gap-2 transition-all active:scale-[0.98] disabled:opacity-60"
                 >
-                  {isSubmitting ? (
-                    <>
-                      <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                      Enviando…
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4" />
-                      Enviar Mensagem
-                    </>
-                  )}
+                  <Send className="w-4 h-4" />
+                  Enviar Mensagem
                 </Button>
               </form>
             )}
@@ -366,10 +361,7 @@ export function Contact() {
             <div className="bg-[#1558a3] text-white rounded-2xl p-6 shadow-lg">
               <div className="flex items-center gap-2 mb-4">
                 <Clock className="w-5 h-5 text-blue-200" />
-                <h3
-                  className="font-bold text-lg"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
-                >
+                <h3 className="font-bold text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>
                   Horários de Atendimento
                 </h3>
               </div>
@@ -395,35 +387,32 @@ export function Contact() {
 
             {/* Dados de contato */}
             <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm space-y-4">
-              <h3
-                className="font-bold text-[#1e2966] text-lg mb-4"
-                style={{ fontFamily: "'Playfair Display', serif" }}
-              >
+              <h3 className="font-bold text-[#1e2966] text-lg mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
                 Informações de Contato
               </h3>
               <ContactItem icon={<Phone className="w-4 h-4" />} label="WhatsApp">
                 <a
-                  href="https://wa.me/5569993522957"
+                  href={WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#1558a3] hover:underline text-sm"
                   style={{ fontFamily: "'Inter', sans-serif" }}
                 >
-                  (69) 99352-2957
+                  {WHATSAPP_PHONE_DISPLAY}
                 </a>
               </ContactItem>
               <ContactItem icon={<Mail className="w-4 h-4" />} label="E-mail">
                 <a
-                  href="mailto:contato@drsamuelholder.com.br"
+                  href={`mailto:${EMAIL}`}
                   className="text-[#1558a3] hover:underline text-sm"
                   style={{ fontFamily: "'Inter', sans-serif" }}
                 >
-                  contato@drsamuelholder.com.br
+                  {EMAIL}
                 </a>
               </ContactItem>
               <ContactItem icon={<Instagram className="w-4 h-4" />} label="Instagram">
                 <a
-                  href="https://instagram.com/drsamuelholder"
+                  href={INSTAGRAM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#1558a3] hover:underline text-sm"
@@ -434,7 +423,7 @@ export function Contact() {
               </ContactItem>
               <ContactItem icon={<Linkedin className="w-4 h-4" />} label="LinkedIn">
                 <a
-                  href="https://linkedin.com/in/drsamuelholder"
+                  href={LINKEDIN_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#1558a3] hover:underline text-sm"
@@ -447,10 +436,7 @@ export function Contact() {
 
             {/* Locais de atendimento */}
             <div>
-              <h3
-                className="font-bold text-[#1e2966] text-lg mb-4"
-                style={{ fontFamily: "'Playfair Display', serif" }}
-              >
+              <h3 className="font-bold text-[#1e2966] text-lg mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
                 Locais de Atendimento
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -461,23 +447,14 @@ export function Contact() {
                     style={{ backgroundColor: loc.color, borderColor: loc.border }}
                   >
                     <span className="text-2xl block mb-2" aria-hidden="true">{loc.icon}</span>
-                    <p
-                      className="text-sm font-semibold text-gray-800 mb-0.5"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    >
+                    <p className="text-sm font-semibold text-gray-800 mb-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
                       {loc.name}
                     </p>
-                    <p
-                      className="text-xs text-gray-500 flex items-start gap-1"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    >
+                    <p className="text-xs text-gray-500 flex items-start gap-1" style={{ fontFamily: "'Inter', sans-serif" }}>
                       <MapPin className="w-3 h-3 mt-0.5 shrink-0" />
                       {loc.address}
                     </p>
-                    <span
-                      className="inline-block mt-2 text-xs text-[#1558a3] font-medium"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    >
+                    <span className="inline-block mt-2 text-xs text-[#1558a3] font-medium" style={{ fontFamily: "'Inter', sans-serif" }}>
                       {loc.type}
                     </span>
                   </div>
@@ -487,6 +464,67 @@ export function Contact() {
           </motion.div>
         </div>
       </div>
+
+      {/* ── DIALOG: escolha de canal ── */}
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle style={{ fontFamily: "'Playfair Display', serif" }}>
+              Como deseja enviar?
+            </DialogTitle>
+            <DialogDescription style={{ fontFamily: "'Inter', sans-serif" }}>
+              Sua mensagem já está pronta. Escolha o canal de preferência.
+            </DialogDescription>
+          </DialogHeader>
+
+          {/* Resumo do que será enviado */}
+          {pendingData && (
+            <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-600 space-y-1 border border-gray-100" style={{ fontFamily: "'Inter', sans-serif" }}>
+              <p><span className="font-semibold text-gray-800">Nome:</span> {pendingData.name}</p>
+              <p><span className="font-semibold text-gray-800">Telefone:</span> {pendingData.phone}</p>
+              {pendingData.specialty && (
+                <p><span className="font-semibold text-gray-800">Motivo:</span> {pendingData.specialty}</p>
+              )}
+              {pendingData.message && (
+                <p className="line-clamp-2"><span className="font-semibold text-gray-800">Mensagem:</span> {pendingData.message}</p>
+              )}
+            </div>
+          )}
+
+          {/* Botões de escolha */}
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <button
+              onClick={() => handleSend('whatsapp')}
+              className="flex flex-col items-center gap-3 bg-[#059669] hover:bg-[#047857] text-white rounded-2xl p-5 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shadow-md"
+            >
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                <Phone className="w-6 h-6" />
+              </div>
+              <div className="text-center">
+                <p className="font-bold text-base" style={{ fontFamily: "'Playfair Display', serif" }}>WhatsApp</p>
+                <p className="text-xs text-green-100 mt-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  {WHATSAPP_PHONE_DISPLAY}
+                </p>
+              </div>
+            </button>
+
+            <button
+              onClick={() => handleSend('email')}
+              className="flex flex-col items-center gap-3 bg-[#1558a3] hover:bg-[#1e3a8a] text-white rounded-2xl p-5 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shadow-md"
+            >
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                <MessageSquare className="w-6 h-6" />
+              </div>
+              <div className="text-center">
+                <p className="font-bold text-base" style={{ fontFamily: "'Playfair Display', serif" }}>E-mail</p>
+                <p className="text-xs text-blue-200 mt-0.5 break-all" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  {EMAIL}
+                </p>
+              </div>
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
@@ -508,10 +546,7 @@ function ContactItem({
         {icon}
       </div>
       <div>
-        <p
-          className="text-xs text-gray-500 mb-0.5"
-          style={{ fontFamily: "'Inter', sans-serif" }}
-        >
+        <p className="text-xs text-gray-500 mb-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
           {label}
         </p>
         {children}

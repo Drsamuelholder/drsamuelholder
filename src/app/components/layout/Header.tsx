@@ -1,17 +1,8 @@
-/**
- * Componente de cabeçalho fixo (sticky) do site
- *
- * Responsável pela navegação principal do site.
- * - Muda o fundo ao rolar (glassmorphism → sólido)
- * - Menu hambúrguer funcional para mobile
- * - Link direto para WhatsApp como CTA principal
- * - Smooth scroll para as seções da página
- */
-
 import { useState, useEffect } from 'react';
 import { Menu, X, Phone, Stethoscope } from 'lucide-react';
 import { Button } from '../ui/button';
 import { cn } from '../ui/utils';
+import { WHATSAPP_URL } from '../../constants';
 
 // ══════════════════════════════
 // DADOS DE NAVEGAÇÃO
@@ -31,12 +22,6 @@ const NAV_LINKS: NavLink[] = [
   { label: 'Contato', href: '#contato' },
 ];
 
-// Número de WhatsApp para o CTA
-const WHATSAPP_NUMBER = '5511947191129';
-const WHATSAPP_MSG = encodeURIComponent(
-  'Olá, Dr. Samuel! Gostaria de agendar uma consulta.'
-);
-
 // ══════════════════════════════
 // COMPONENTE
 // ══════════════════════════════
@@ -45,14 +30,12 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  // Detecta o scroll para alterar o estilo do header
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Fecha o menu mobile ao redimensionar para desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) setIsMobileOpen(false);
@@ -61,7 +44,6 @@ export function Header() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Fecha o menu mobile e navega suavemente para a seção
   const handleNavClick = (href: string) => {
     setIsMobileOpen(false);
     const el = document.querySelector(href);
@@ -92,19 +74,16 @@ export function Header() {
             </div>
             <div className="leading-tight">
               <span
-                className={cn("block font-bold tracking-wide transition-colors text-[15px] text-[16px] text-[20px] text-[24px]", isScrolled ? 'text-[#1e2966]' : 'text-white')}
+                className={cn('block text-xl font-bold tracking-wide transition-colors', isScrolled ? 'text-[#1e2966]' : 'text-white')}
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
                 Dr. Samuel Holder
               </span>
               <span
-                className={cn(
-                  'block text-xs transition-colors',
-                  isScrolled ? 'text-[#1558a3]' : 'text-blue-200'
-                )}
+                className={cn('block text-xs transition-colors', isScrolled ? 'text-[#1558a3]' : 'text-blue-200')}
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
-                Endocrinologia e Metabologia• CRM SP 178335
+                Endocrinologia e Metabologia · CRM SP 178335
               </span>
             </div>
           </a>
@@ -130,9 +109,8 @@ export function Header() {
 
           {/* ── CTA WHATSAPP + HAMBURGER ── */}
           <div className="flex items-center gap-3">
-            {/* Botão WhatsApp - visível a partir de tablet */}
             <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MSG}`}
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:flex"
@@ -147,7 +125,6 @@ export function Header() {
               </Button>
             </a>
 
-            {/* Botão hambúrguer - apenas mobile */}
             <button
               className={cn(
                 'lg:hidden p-2 rounded-lg transition-colors',
@@ -184,9 +161,8 @@ export function Header() {
               {link.label}
             </a>
           ))}
-          {/* CTA WhatsApp no menu mobile */}
           <a
-            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MSG}`}
+            href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-2"

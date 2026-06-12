@@ -1,12 +1,12 @@
-/**
- * Componente Footer – Rodapé completo do site
- *
- * Contém: logo + slogan, links de navegação rápida,
- * informações de contato, redes sociais, aviso legal e copyright.
- * Background azul escuro (identidade médica premium).
- */
-
-import { Stethoscope, Phone, Mail, Instagram, Linkedin, MapPin, Heart, ExternalLink } from 'lucide-react';
+import { Stethoscope, Phone, Mail, Instagram, Linkedin, MapPin, ExternalLink } from 'lucide-react';
+import {
+  WHATSAPP_URL,
+  WHATSAPP_PHONE_DISPLAY,
+  DOCTORALIA_URL,
+  INSTAGRAM_URL,
+  LINKEDIN_URL,
+  EMAIL,
+} from '../../constants';
 
 // ══════════════════════════════
 // DADOS
@@ -35,8 +35,6 @@ const SPECIALTIES: FooterLink[] = [
   { label: 'Síndrome Metabólica', href: '#especialidades' },
 ];
 
-const WHATSAPP_NUMBER = '5569993522957';
-
 // ══════════════════════════════
 // COMPONENTE
 // ══════════════════════════════
@@ -53,28 +51,19 @@ export function Footer() {
       style={{ background: 'linear-gradient(180deg, #1e2966 0%, #0f1845 100%)' }}
     >
       {/* ── FAIXA CTA SUPERIOR ── */}
-      <div
-        className="border-b border-white/10"
-        style={{ background: 'rgba(21,88,163,0.4)' }}
-      >
+      <div className="border-b border-white/10" style={{ background: 'rgba(21,88,163,0.4)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p
-                className="text-xl font-bold text-white"
-                style={{ fontFamily: "'Playfair Display', serif" }}
-              >
+              <p className="text-xl font-bold text-white" style={{ fontFamily: "'Playfair Display', serif" }}>
                 Pronto para cuidar da sua saúde?
               </p>
-              <p
-                className="text-blue-200 text-sm mt-1"
-                style={{ fontFamily: "'Inter', sans-serif" }}
-              >
+              <p className="text-blue-200 text-sm mt-1" style={{ fontFamily: "'Inter', sans-serif" }}>
                 Agende sua consulta agora mesmo — resposta em minutos.
               </p>
             </div>
             <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Olá, Dr. Samuel! Gostaria de agendar uma consulta.')}`}
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 bg-[#059669] hover:bg-[#047857] text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 hover:-translate-y-0.5 active:scale-95 whitespace-nowrap shadow-lg"
@@ -98,31 +87,21 @@ export function Footer() {
                 <Stethoscope className="w-5 h-5 text-white" />
               </div>
               <div>
-                <span
-                  className="block text-sm font-bold text-white"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
-                >
+                <span className="block text-sm font-bold text-white" style={{ fontFamily: "'Playfair Display', serif" }}>
                   Dr. Samuel Holder
                 </span>
-                <span
-                  className="block text-xs text-blue-300"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                >
+                <span className="block text-xs text-blue-300" style={{ fontFamily: "'Inter', sans-serif" }}>
                   Endocrinologista
                 </span>
               </div>
             </div>
-            <p
-              className="text-sm text-blue-200 leading-relaxed mb-5"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
+            <p className="text-sm text-blue-200 leading-relaxed mb-5" style={{ fontFamily: "'Inter', sans-serif" }}>
               Especialista em endocrinologia e metabolismo. Cuidado médico humanizado
               para diabetes, emagrecimento e equilíbrio hormonal.
             </p>
-            {/* Redes sociais */}
             <div className="flex gap-3">
               <a
-                href="https://instagram.com/drsamuelholder"
+                href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-lg bg-white/10 hover:bg-[#1558a3] flex items-center justify-center transition-colors"
@@ -131,7 +110,7 @@ export function Footer() {
                 <Instagram className="w-4 h-4" />
               </a>
               <a
-                href="https://linkedin.com/in/drsamuelholder"
+                href={LINKEDIN_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-lg bg-white/10 hover:bg-[#1558a3] flex items-center justify-center transition-colors"
@@ -140,7 +119,7 @@ export function Footer() {
                 <Linkedin className="w-4 h-4" />
               </a>
               <a
-                href="https://www.doctoralia.com.br/samuel-ramos-holder/endocrinologista/sao-paulo"
+                href={DOCTORALIA_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-lg bg-white/10 hover:bg-[#1558a3] flex items-center justify-center transition-colors"
@@ -153,15 +132,12 @@ export function Footer() {
 
           {/* Coluna 2: Links rápidos */}
           <div>
-            <h3
-              className="text-sm font-semibold text-white uppercase tracking-wider mb-4"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
+            <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4" style={{ fontFamily: "'Inter', sans-serif" }}>
               Navegação Rápida
             </h3>
             <ul className="space-y-2">
               {QUICK_LINKS.map((link) => (
-                <li key={link.href}>
+                <li key={link.href + link.label}>
                   <a
                     href={link.href}
                     onClick={(e) => { e.preventDefault(); scrollTo(link.href); }}
@@ -177,10 +153,7 @@ export function Footer() {
 
           {/* Coluna 3: Especialidades */}
           <div>
-            <h3
-              className="text-sm font-semibold text-white uppercase tracking-wider mb-4"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
+            <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4" style={{ fontFamily: "'Inter', sans-serif" }}>
               Especialidades
             </h3>
             <ul className="space-y-2">
@@ -201,50 +174,43 @@ export function Footer() {
 
           {/* Coluna 4: Contato */}
           <div>
-            <h3
-              className="text-sm font-semibold text-white uppercase tracking-wider mb-4"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
+            <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4" style={{ fontFamily: "'Inter', sans-serif" }}>
               Contato
             </h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <Phone className="w-4 h-4 text-blue-300 mt-0.5 shrink-0" />
                 <a
-                  href="https://wa.me/5569993522957"
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-sm text-blue-200 hover:text-white transition-colors"
                   style={{ fontFamily: "'Inter', sans-serif" }}
                 >
-                  (69) 99352-2957
+                  {WHATSAPP_PHONE_DISPLAY}
                 </a>
               </li>
               <li className="flex items-start gap-2">
                 <Mail className="w-4 h-4 text-blue-300 mt-0.5 shrink-0" />
                 <a
-                  href="mailto:contato@drsamuelholder.com.br"
+                  href={`mailto:${EMAIL}`}
                   className="text-sm text-blue-200 hover:text-white transition-colors break-all"
                   style={{ fontFamily: "'Inter', sans-serif" }}
                 >
-                  contato@drsamuelholder.com.br
+                  {EMAIL}
                 </a>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-blue-300 mt-0.5 shrink-0" />
-                <span
-                  className="text-sm text-blue-200"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                >
-                  Avenida Paulista, 2064, 21 andar, Bela Vista<br />
-                  São Paulo – SP
+                <span className="text-sm text-blue-200" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  Avenida Paulista, 2064, 21° andar<br />
+                  Bela Vista — São Paulo, SP
                 </span>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-blue-300 mt-0.5 shrink-0" />
-                <span
-                  className="text-sm text-blue-200"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                >
-                  Porto Velho – RO
+                <span className="text-sm text-blue-200" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  Porto Velho — RO
                 </span>
               </li>
             </ul>
@@ -259,18 +225,32 @@ export function Footer() {
             <p style={{ fontFamily: "'Inter', sans-serif" }}>
               © {new Date().getFullYear()} Dr. Samuel Holder – Endocrinologista. Todos os direitos reservados.
             </p>
-            <p
-              className="flex items-center gap-1"
+            {/* Crédito API111 */}
+            <a
+              href="https://www.api111.com.br"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 group px-3 py-1.5 rounded-full border border-white/10 hover:border-[#1558a3] hover:bg-white/5 transition-all duration-300"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
-              Feito com <Heart className="w-3 h-3 text-red-400 fill-red-400" /> para a saúde dos pacientes
-            </p>
+              <span className="text-blue-400 group-hover:text-white transition-colors text-xs">
+                Desenvolvido por
+              </span>
+              {/* Logo API111 */}
+              <span className="flex items-center gap-1.5">
+                <svg width="18" height="18" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-70 group-hover:opacity-100 transition-opacity">
+                  <circle cx="18" cy="5" r="4" fill="currentColor" className="text-white"/>
+                  <rect x="10" y="14" width="7" height="17" rx="2" fill="currentColor" className="text-white"/>
+                  <rect x="20" y="10" width="7" height="21" rx="2" fill="currentColor" className="text-white"/>
+                  <rect x="30" y="16" width="6" height="15" rx="2" fill="currentColor" className="text-white"/>
+                </svg>
+                <span className="font-bold text-white tracking-wide text-xs group-hover:text-[#60a5fa] transition-colors">
+                  API111
+                </span>
+              </span>
+            </a>
           </div>
-          {/* Aviso legal */}
-          <p
-            className="mt-3 text-xs text-blue-400/60 text-center max-w-2xl mx-auto"
-            style={{ fontFamily: "'Inter', sans-serif" }}
-          >
+          <p className="mt-3 text-xs text-blue-400/60 text-center max-w-2xl mx-auto" style={{ fontFamily: "'Inter', sans-serif" }}>
             As informações deste site têm caráter informativo e não substituem a consulta médica.
             Sempre consulte um profissional de saúde habilitado para diagnóstico e tratamento.
           </p>
