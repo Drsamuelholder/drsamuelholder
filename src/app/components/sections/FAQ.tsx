@@ -1,11 +1,3 @@
-/**
- * Seção FAQ – Perguntas Frequentes sobre Endocrinologia
- *
- * Utiliza o componente Accordion do design system para
- * exibir as perguntas e respostas mais comuns dos pacientes.
- * Dividido em duas colunas no desktop para melhor leitura.
- */
-
 import { motion } from 'motion/react';
 import {
   Accordion,
