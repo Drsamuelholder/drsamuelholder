@@ -2,20 +2,13 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'motion/react';
 import {
-  Phone, Mail, MapPin, Instagram, Linkedin,
-  Send, CheckCircle, Clock, Calendar, MessageSquare,
+  Phone, Mail, Instagram, Linkedin,
+  Send, CheckCircle, Clock, Calendar,
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '../ui/dialog';
 import { cn } from '../ui/utils';
 import type { ReactNode } from 'react';
 import {
@@ -43,40 +36,6 @@ interface ContactFormData {
 // DADOS ESTÁTICOS
 // ══════════════════════════════
 
-const LOCATIONS = [
-  {
-    name: 'São Paulo - SP',
-    address: 'Shopping Top Center — Av. Paulista, 2064, 21° andar, Bela Vista',
-    type: 'Consultório Particular',
-    color: '#f0fdf4',
-    border: '#bbf7d0',
-    icon: '🩺',
-  },
-  {
-    name: 'Porto Velho – RO',
-    address: 'Porto Velho, Rondônia',
-    type: 'Cidade Natal · Teleconsulta',
-    color: '#fdf4ff',
-    border: '#e9d5ff',
-    icon: '📍',
-  },
-  {
-    name: 'Hospital São Camilo',
-    address: 'Ipiranga — São Paulo, SP',
-    type: 'Hospital de Referência',
-    color: '#eff6ff',
-    border: '#bfdbfe',
-    icon: '🏥',
-  },
-  {
-    name: 'Hospital 9 de Julho',
-    address: 'Jardins — São Paulo, SP',
-    type: 'Hospital de Referência',
-    color: '#eff6ff',
-    border: '#bfdbfe',
-    icon: '🏥',
-  },
-];
 
 const SPECIALTIES = [
   'Emagrecimento Médico',
@@ -104,27 +63,12 @@ function buildWhatsAppURL(data: ContactFormData): string {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join('\n'))}`;
 }
 
-function buildMailtoURL(data: ContactFormData): string {
-  const subject = encodeURIComponent(`Consulta - ${data.name}`);
-  const lines = [
-    `Nome: ${data.name}`,
-    `E-mail: ${data.email}`,
-    `Telefone: ${data.phone}`,
-    data.specialty ? `Motivo: ${data.specialty}` : '',
-    data.message ? `\nMensagem:\n${data.message}` : '',
-  ].filter(Boolean);
-  const body = encodeURIComponent(lines.join('\n'));
-  return `mailto:${EMAIL}?subject=${subject}&body=${body}`;
-}
-
 // ══════════════════════════════
 // COMPONENTE
 // ══════════════════════════════
 
 export function Contact() {
   const [submitted, setSubmitted] = useState(false);
-  const [pendingData, setPendingData] = useState<ContactFormData | null>(null);
-  const [showDialog, setShowDialog] = useState(false);
 
   const {
     register,
@@ -133,20 +77,9 @@ export function Contact() {
     formState: { errors, isSubmitting },
   } = useForm<ContactFormData>();
 
-  // Ao validar o formulário, abre o dialog de escolha
   const onSubmit = (data: ContactFormData) => {
-    setPendingData(data);
-    setShowDialog(true);
-  };
-
-  // Chamado diretamente pelo clique no botão — sem delay, evita bloqueio do browser
-  const handleSend = (channel: 'whatsapp' | 'email') => {
-    if (!pendingData) return;
-    const url = channel === 'whatsapp'
-      ? buildWhatsAppURL(pendingData)
-      : buildMailtoURL(pendingData);
+    const url = buildWhatsAppURL(data);
     window.open(url, '_blank');
-    setShowDialog(false);
     setSubmitted(true);
     reset();
   };
@@ -434,97 +367,10 @@ export function Contact() {
               </ContactItem>
             </div>
 
-            {/* Locais de atendimento */}
-            <div>
-              <h3 className="font-bold text-[#1e2966] text-lg mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
-                Locais de Atendimento
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {LOCATIONS.map((loc) => (
-                  <div
-                    key={loc.name}
-                    className="rounded-xl p-4 border hover:shadow-md transition-shadow cursor-default"
-                    style={{ backgroundColor: loc.color, borderColor: loc.border }}
-                  >
-                    <span className="text-2xl block mb-2" aria-hidden="true">{loc.icon}</span>
-                    <p className="text-sm font-semibold text-gray-800 mb-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
-                      {loc.name}
-                    </p>
-                    <p className="text-xs text-gray-500 flex items-start gap-1" style={{ fontFamily: "'Inter', sans-serif" }}>
-                      <MapPin className="w-3 h-3 mt-0.5 shrink-0" />
-                      {loc.address}
-                    </p>
-                    <span className="inline-block mt-2 text-xs text-[#1558a3] font-medium" style={{ fontFamily: "'Inter', sans-serif" }}>
-                      {loc.type}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </motion.div>
         </div>
       </div>
 
-      {/* ── DIALOG: escolha de canal ── */}
-      <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle style={{ fontFamily: "'Playfair Display', serif" }}>
-              Como deseja enviar?
-            </DialogTitle>
-            <DialogDescription style={{ fontFamily: "'Inter', sans-serif" }}>
-              Sua mensagem já está pronta. Escolha o canal de preferência.
-            </DialogDescription>
-          </DialogHeader>
-
-          {/* Resumo do que será enviado */}
-          {pendingData && (
-            <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-600 space-y-1 border border-gray-100" style={{ fontFamily: "'Inter', sans-serif" }}>
-              <p><span className="font-semibold text-gray-800">Nome:</span> {pendingData.name}</p>
-              <p><span className="font-semibold text-gray-800">Telefone:</span> {pendingData.phone}</p>
-              {pendingData.specialty && (
-                <p><span className="font-semibold text-gray-800">Motivo:</span> {pendingData.specialty}</p>
-              )}
-              {pendingData.message && (
-                <p className="line-clamp-2"><span className="font-semibold text-gray-800">Mensagem:</span> {pendingData.message}</p>
-              )}
-            </div>
-          )}
-
-          {/* Botões de escolha */}
-          <div className="grid grid-cols-2 gap-3 pt-2">
-            <button
-              onClick={() => handleSend('whatsapp')}
-              className="flex flex-col items-center gap-3 bg-[#059669] hover:bg-[#047857] text-white rounded-2xl p-5 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shadow-md"
-            >
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                <Phone className="w-6 h-6" />
-              </div>
-              <div className="text-center">
-                <p className="font-bold text-base" style={{ fontFamily: "'Playfair Display', serif" }}>WhatsApp</p>
-                <p className="text-xs text-green-100 mt-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
-                  {WHATSAPP_PHONE_DISPLAY}
-                </p>
-              </div>
-            </button>
-
-            <button
-              onClick={() => handleSend('email')}
-              className="flex flex-col items-center gap-3 bg-[#1558a3] hover:bg-[#1e3a8a] text-white rounded-2xl p-5 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shadow-md"
-            >
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                <MessageSquare className="w-6 h-6" />
-              </div>
-              <div className="text-center">
-                <p className="font-bold text-base" style={{ fontFamily: "'Playfair Display', serif" }}>E-mail</p>
-                <p className="text-xs text-blue-200 mt-0.5 break-all" style={{ fontFamily: "'Inter', sans-serif" }}>
-                  {EMAIL}
-                </p>
-              </div>
-            </button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </section>
   );
 }
