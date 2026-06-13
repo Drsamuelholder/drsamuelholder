@@ -1,10 +1,3 @@
-/**
- * Seção Especialidades – Serviços oferecidos pelo Dr. Samuel Holder
- *
- * Grid de cards com as principais especialidades tratadas.
- * Cada card possui ícone, título, descrição e hover animado.
- */
-
 import { motion } from 'motion/react';
 import { Activity, Droplets, Flame, Dna, Bone, BarChart3 } from 'lucide-react';
 import { ImageWithFallback } from '../figma/ImageWithFallback';

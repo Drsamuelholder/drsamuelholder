@@ -1,10 +1,3 @@
-/**
- * Seção Stats – Números e conquistas do Dr. Samuel Holder
- *
- * Faixa com fundo azul gradiente mostrando as principais
- * métricas e diferenciais do consultório.
- */
-
 import { motion } from 'motion/react';
 import { Award, Users, Building2, Globe } from 'lucide-react';
 import type { ReactNode } from 'react';
