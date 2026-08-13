@@ -16,9 +16,9 @@ const NAV_LINKS: NavLink[] = [
   { label: 'Início', href: '#inicio' },
   { label: 'Sobre', href: '#sobre' },
   { label: 'Especialidades', href: '#especialidades' },
+  { label: 'Contato/Agendar', href: '#contato' },
   { label: 'Depoimentos', href: '#depoimentos' },
   { label: 'FAQ', href: '#faq' },
-  { label: 'Contato', href: '#contato' },
 ];
 
 // ══════════════════════════════

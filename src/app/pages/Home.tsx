@@ -35,9 +35,9 @@ export function Home() {
         <Stats />
         <About />
         <Services />
+        <Contact />
         <Testimonials />
         <FAQ />
-        <Contact />
       </main>
 
       <Footer />
