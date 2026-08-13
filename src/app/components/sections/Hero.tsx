@@ -4,7 +4,6 @@ import { Button } from '../ui/button';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import type { ReactNode } from 'react';
 import drSamuelhome from '@/imports/Perfilhome.PNG';
-import { WHATSAPP_URL } from '../../constants';
 
 // ══════════════════════════════
 // DADOS
@@ -30,6 +29,10 @@ const STATS: Stat[] = [
 export function Hero() {
   const scrollToAbout = () => {
     document.querySelector('#sobre')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToContact = () => {
+    document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -109,11 +112,12 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="w-full flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start mb-10"
             >
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-                <Button className="w-full bg-[#059669] hover:bg-[#047857] text-white text-base px-8 py-4 h-auto rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5 active:scale-95 min-h-[56px]">
-                  📱 Agendar Consulta pelo WhatsApp
-                </Button>
-              </a>
+              <Button
+                onClick={scrollToContact}
+                className="w-full sm:w-auto bg-[#059669] hover:bg-[#047857] text-white text-base px-8 py-4 h-auto rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5 active:scale-95 min-h-[56px]"
+              >
+                📅 Agendar Consulta
+              </Button>
               <button
                 onClick={scrollToAbout}
                 className="w-full sm:w-auto flex items-center justify-center gap-2 border-2 border-white/40 text-white px-8 py-4 rounded-xl font-medium text-base hover:bg-white/10 transition-all duration-300 min-h-[56px]"

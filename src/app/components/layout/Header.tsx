@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Menu, X, Phone, Stethoscope } from 'lucide-react';
 import { Button } from '../ui/button';
 import { cn } from '../ui/utils';
-import { WHATSAPP_URL } from '../../constants';
 
 // ══════════════════════════════
 // DADOS DE NAVEGAÇÃO
@@ -17,9 +16,9 @@ const NAV_LINKS: NavLink[] = [
   { label: 'Início', href: '#inicio' },
   { label: 'Sobre', href: '#sobre' },
   { label: 'Especialidades', href: '#especialidades' },
+  { label: 'Contato/Agendar', href: '#contato' },
   { label: 'Depoimentos', href: '#depoimentos' },
   { label: 'FAQ', href: '#faq' },
-  { label: 'Contato', href: '#contato' },
 ];
 
 // ══════════════════════════════
@@ -107,23 +106,17 @@ export function Header() {
             ))}
           </nav>
 
-          {/* ── CTA WHATSAPP + HAMBURGER ── */}
+          {/* ── CTA AGENDAR + HAMBURGER ── */}
           <div className="flex items-center gap-3">
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:flex"
+            <Button
+              onClick={() => handleNavClick('#contato')}
+              className="hidden sm:flex bg-[#059669] hover:bg-[#047857] text-white shadow-md gap-2 transition-all duration-200 active:scale-95"
+              size="sm"
             >
-              <Button
-                className="bg-[#059669] hover:bg-[#047857] text-white shadow-md gap-2 transition-all duration-200 active:scale-95"
-                size="sm"
-              >
-                <Phone className="w-4 h-4" />
-                <span className="hidden md:inline">Agendar Consulta</span>
-                <span className="md:hidden">WhatsApp</span>
-              </Button>
-            </a>
+              <Phone className="w-4 h-4" />
+              <span className="hidden md:inline">Agendar Consulta</span>
+              <span className="md:hidden">Agendar</span>
+            </Button>
 
             <button
               className={cn(
@@ -161,17 +154,13 @@ export function Header() {
               {link.label}
             </a>
           ))}
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2"
+          <Button
+            onClick={() => handleNavClick('#contato')}
+            className="mt-2 w-full bg-[#059669] hover:bg-[#047857] text-white gap-2"
           >
-            <Button className="w-full bg-[#059669] hover:bg-[#047857] text-white gap-2">
-              <Phone className="w-4 h-4" />
-              Agendar pelo WhatsApp
-            </Button>
-          </a>
+            <Phone className="w-4 h-4" />
+            Agendar Consulta
+          </Button>
         </nav>
       </div>
     </header>

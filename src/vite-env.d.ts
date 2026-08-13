@@ -9,6 +9,7 @@ declare namespace JSX {
       professional?: string;
       'client-token'?: string;
       theme?: 'light' | 'dark';
+      size?: 'compact' | 'medium' | 'large' | 'split' | 'wizard';
     };
   }
 }
