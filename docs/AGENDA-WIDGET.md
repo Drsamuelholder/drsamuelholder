@@ -87,8 +87,9 @@ de propósito.
 `vercel --prod`). Confirmado com navegador real: seção "Escolha o Melhor Horário" presente,
 widget carregando dado real do CRM, sem erro no console.
 
-**⚠️ Importante**: isto foi deployado via CLI direto (`vercel --prod --token`), **não** via merge
-em `origin/main` — a branch `feat/agenda-widget-embed` continua sem merge. Produção está à frente
-do que `git log origin/main` mostra. Ver o spec doc no monorepo do CRM (caminho no topo deste
-arquivo) pra mais detalhe (IDs de deployment, etc.) — evitar duplicar aqui e desatualizar em um
-lugar só.
+**Atualização mesmo dia**: `feat/agenda-widget-embed` foi mesclada em `main` via PR
+([#8](https://github.com/Drsamuelholder/drsamuelholder/pull/8), usando `gh` CLI autenticado como
+`MarcioAnttonio` — o remote local ainda aponta pra `MarcioAnttonio/drsamuelholder.git`, mas esse
+repo foi transferido pra conta `Drsamuelholder`; git segue redirecionando automaticamente). `main`
+e produção agora batem. Ver o spec doc no monorepo do CRM (caminho no topo deste arquivo) pra mais
+detalhe (IDs de deployment, etc.) — evitar duplicar aqui e desatualizar em um lugar só.
