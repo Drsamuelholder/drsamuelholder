@@ -1,0 +1,9 @@
+# Deploy via CLI (sem integração Git, usando --token) não confia 100% no .gitignore pra montar
+# o upload — este é o arquivo que a Vercel realmente respeita. Ver docs/CLONE-CLIENTE.md do
+# monorepo do CRM (Etapa 4) — mesmo padrão usado lá, .git* com asterisco (não só .git) porque o
+# deploy renomeia .git pra .git-hidden-for-deploy antes de subir (pra não anexar o autor pessoal
+# do commit ao deploy do cliente); sem o asterisco, a pasta renomeada escapa do padrão exato e o
+# histórico completo do git sobe junto, visível na aba "Source" do deployment.
+node_modules
+.git*
+dist

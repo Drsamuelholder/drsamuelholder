@@ -10,6 +10,7 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 import { cn } from '../ui/utils';
+import { AgendaWidget } from './AgendaWidget';
 import type { ReactNode } from 'react';
 import {
   WHATSAPP_NUMBER,
@@ -110,6 +111,20 @@ export function Contact() {
             Dê o primeiro passo para uma vida mais saudável.
             Agende sua consulta hoje mesmo.
           </p>
+        </motion.div>
+
+        {/* ── AGENDAMENTO ONLINE (agenda nativa do CRM, sem iframe) ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mb-12"
+        >
+          <h3 className="text-xl md:text-2xl text-[#1e2966] mb-4 text-center" style={{ fontFamily: "'Playfair Display', serif" }}>
+            Escolha o Melhor Horário
+          </h3>
+          <AgendaWidget />
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">

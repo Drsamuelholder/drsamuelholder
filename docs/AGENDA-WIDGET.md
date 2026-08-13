@@ -4,16 +4,6 @@ Escrito em 13/08/2026 (Claude Code), branch `feat/agenda-widget-embed` (a partir
 Registro completo pra qualquer sessão futura (IA ou humana) — não presumir que já sabe disto só
 pelo `git log`.
 
-> **Nota sobre branches (adicionado 13/08/2026 nesta sessão, branch `SEO.01`)**: este arquivo já
-> existia em `main` (mesclado via PR [#8](https://github.com/Drsamuelholder/drsamuelholder/pull/8)
-> e depois PR #9), mas a branch `SEO.01` (onde este commit está sendo feito) partiu de um ponto
-> anterior a essa mesclagem e por isso **não tem ainda** o código do widget (`AgendaWidget.tsx`,
-> `constants.ts` com `AGENDA_*`, `vite-env.d.ts`) na árvore de arquivos local — só este documento,
-> trazido pra manter o registro consistente entre branches. O widget **já está em produção** em
-> `main`/`www.drsamuelholder.com.br` (ver "Estado dos deploys" abaixo). Quando `SEO.01` for
-> mesclada de volta em `main` (ou `main` for mesclada aqui), o código chega junto — não precisa
-> reimplementar.
-
 ## O que é
 
 A seção "Contato" do site agora mostra um card "Escolha o Melhor Horário" com a agenda **nativa**
@@ -21,24 +11,23 @@ do consultório, carregada de um widget externo (`<api111-agenda>`) — não é 
 site, é um Web Component servido pelo CRM do Dr. Samuel (`app.drsamuelholder.com.br/widget.js`),
 com Shadow DOM (o CSS de um não vaza pro outro em nenhuma direção). Documentação completa da
 arquitetura, decisão de design e testes está no **outro repositório**:
-`C:\Users\marci\Desktop\Deploy\CRM\worktrees\embed-widget-agendamento\docs\superpowers\specs\2026-08-13-widget-agendamento-embutivel.md`
+`C:\Users\marci\Desktop\Deploy\CRM\api111-monorepo\docs\superpowers\specs\2026-08-13-widget-agendamento-embutivel.md`
 (não é um link clicável daqui, é outro repo — mas é onde está o detalhe de verdade).
 
 Este documento cobre só o lado do site institucional.
 
-## Arquivos deste repo envolvidos (presentes em `main`, ainda não em `SEO.01`)
+## Arquivos deste repo envolvidos
 
-- `src/app/components/sections/AgendaWidget.tsx` — carrega o `<script>` do widget (uma vez só,
-  idempotente) e mostra 3 estados: carregando, pronto (o widget de verdade) ou erro/fallback
-  (mensagem + link de WhatsApp).
-- `src/app/components/sections/Contact.tsx` — só adiciona o bloco do `AgendaWidget` acima do
-  formulário de contato que já existia. **Nada foi removido** — o CTA de WhatsApp e o formulário
-  continuam do jeito que estavam.
-- `src/app/constants.ts` — `AGENDA_WIDGET_SCRIPT_URL` e `AGENDA_PROFESSIONAL_ID`, ambos com
-  valores reais confirmados (ver seção seguinte). Nesta branch (`SEO.01`), `constants.ts` ainda só
-  tem os dados de contato (WhatsApp, Doctoralia, redes sociais).
-- `src/vite-env.d.ts` — declaração de tipo pra `<api111-agenda>` (o projeto não roda `tsc` no
-  build, então isto é só conforto do editor, não bloqueia nada).
+- [`src/app/components/sections/AgendaWidget.tsx`](../src/app/components/sections/AgendaWidget.tsx)
+  — carrega o `<script>` do widget (uma vez só, idempotente) e mostra 3 estados: carregando, pronto
+  (o widget de verdade) ou erro/fallback (mensagem + link de WhatsApp).
+- [`src/app/components/sections/Contact.tsx`](../src/app/components/sections/Contact.tsx) — só
+  adiciona o bloco do `AgendaWidget` acima do formulário de contato que já existia. **Nada foi
+  removido** — o CTA de WhatsApp e o formulário continuam do jeito que estavam.
+- [`src/app/constants.ts`](../src/app/constants.ts) — `AGENDA_WIDGET_SCRIPT_URL` e
+  `AGENDA_PROFESSIONAL_ID`, ambos com valores reais confirmados (ver seção seguinte).
+- [`src/vite-env.d.ts`](../src/vite-env.d.ts) — declaração de tipo pra `<api111-agenda>` (o projeto
+  não roda `tsc` no build, então isto é só conforto do editor, não bloqueia nada).
 
 ## Valores confirmados (13/08/2026)
 
@@ -62,16 +51,16 @@ localmente:
 
 1. No monorepo do CRM (`apps/crm-samuel-holder`), rodar `npm run dev` — normalmente sobe em
    `localhost:3000`. Precisa de um `.env.local` ali com credenciais reais do Supabase do Dr. Samuel
-   e, além das vars normais, adicionar `EMBED_ALLOWED_ORIGINS=http://localhost:5173` (ou a porta
-   que o Vite deste site pegar).
-2. Neste repo, criar `.env.local` (raiz) com
-   `VITE_AGENDA_WIDGET_SCRIPT_URL=http://localhost:3000/widget.js`.
+   (existe em `C:\Users\marci\Desktop\Deploy\CRM\api111-monorepo\apps\crm-samuel-holder\.env.local`
+   — copiar pra dentro do worktree/branch que estiver usando) e, além das vars normais, adicionar
+   `EMBED_ALLOWED_ORIGINS=http://localhost:5173` (ou a porta que o Vite deste site pegar).
+2. Neste repo, criar `.env.local` (raiz) com `VITE_AGENDA_WIDGET_SCRIPT_URL=http://localhost:3000/widget.js`.
 3. `npm run dev` aqui (Vite, normalmente `localhost:5173`) — abrir e ir até a seção Contato.
 
-**Já foi testado assim** (sessão de 13/08/2026, branch `feat/agenda-widget-embed`) com dado real
-(profissional, tipos de consulta e horários verdadeiros do banco do Dr. Samuel apareceram no
-widget) — não é teoria, foi confirmado num navegador de verdade, inclusive isolamento de CSS via
-Shadow DOM contra uma folha de estilo hostil de propósito.
+**Já foi testado assim nesta sessão** com dado real (profissional, tipos de consulta e horários
+verdadeiros do banco do Dr. Samuel apareceram no widget) — não é teoria, foi confirmado num
+navegador de verdade, inclusive isolamento de CSS via Shadow DOM contra uma folha de estilo hostil
+de propósito.
 
 ## O que NÃO foi testado (de propósito)
 
@@ -87,34 +76,20 @@ Shadow DOM contra uma folha de estilo hostil de propósito.
   de verificação direta (arquivo `.env.local` real + consulta ao banco), não de suposição.
 - **Não** commitar `.env.local` (override de teste local) — já está no `.gitignore`, mas confirmar
   se criar um novo em outra sessão.
-- **Não** presumir que o widget "só funciona" sem testar — ele já quebrou uma vez por um bug do
-  lado do CRM (rota estática bloqueada por middleware de login) que só apareceu testando de
-  verdade, não no code review.
+- **Não** presumir que o widget "só funciona" sem testar — ele já quebrou uma vez por um bug do lado
+  do CRM (rota estática bloqueada por middleware de login) que só apareceu testando de verdade, não
+  no code review.
 
-## Estado dos deploys
+## Estado dos deploys — ATUALIZADO 13/08/2026
 
 **Já está em produção**, `www.drsamuelholder.com.br` (aliasado manualmente via `vercel alias set`
 — o alias não seguiu automático pro deployment novo, precisou do comando explícito depois do
-`vercel --prod`). Confirmado com navegador real: seção "Escolha o Melhor Horário" presente, widget
-carregando dado real do CRM, sem erro no console.
+`vercel --prod`). Confirmado com navegador real: seção "Escolha o Melhor Horário" presente,
+widget carregando dado real do CRM, sem erro no console.
 
-`feat/agenda-widget-embed` foi mesclada em `main` via PR
-([#8](https://github.com/Drsamuelholder/drsamuelholder/pull/8), depois PR #9 trouxe outra rodada),
-usando `gh` CLI autenticado como `MarcioAnttonio` — o remote local ainda aponta pra
-`MarcioAnttonio/drsamuelholder.git`, mas esse repo foi transferido pra conta `Drsamuelholder`; git
-segue redirecionando automaticamente. `main` e produção batem.
-
-`SEO.01` (esta branch) foi criada/atualizada **depois** desse merge original mas ainda não recebeu
-a mescla de volta de `main` — ver nota no topo deste arquivo.
-
-## Pendências
-
-- [ ] Mesclar `main` (ou `feat/agenda-widget-embed`) dentro de `SEO.01`, ou vice-versa, pra unir o
-  trabalho de SEO com o widget numa árvore só antes do próximo deploy de produção.
-- [ ] Testar o fluxo de `submit` completo do widget (criar agendamento de teste real) — precisa de
-  autorização explícita do Marcio, recusado até agora por criar dado real.
-- [ ] Decidir se `AGENDA_PROFESSIONAL_ID`/`AGENDA_WIDGET_SCRIPT_URL` viram env vars de build
-  (`VITE_*`) versionadas, hoje são constantes hardcoded (proposital, único profissional/site hoje).
-
-Ver o spec doc no monorepo do CRM (caminho no topo deste arquivo) pra mais detalhe (IDs de
-deployment, etc.) — evitar duplicar aqui e desatualizar em um lugar só.
+**Atualização mesmo dia**: `feat/agenda-widget-embed` foi mesclada em `main` via PR
+([#8](https://github.com/Drsamuelholder/drsamuelholder/pull/8), usando `gh` CLI autenticado como
+`MarcioAnttonio` — o remote local ainda aponta pra `MarcioAnttonio/drsamuelholder.git`, mas esse
+repo foi transferido pra conta `Drsamuelholder`; git segue redirecionando automaticamente). `main`
+e produção agora batem. Ver o spec doc no monorepo do CRM (caminho no topo deste arquivo) pra mais
+detalhe (IDs de deployment, etc.) — evitar duplicar aqui e desatualizar em um lugar só.
