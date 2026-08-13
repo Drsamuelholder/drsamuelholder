@@ -31,7 +31,9 @@ function loadWidgetScript(): Promise<void> {
 }
 
 // Card com a agenda nativa do CRM (Web Component, Shadow DOM — sem iframe). Mantém altura mínima
-// reservada enquanto carrega pra não pular o layout da seção ao redor.
+// reservada enquanto carrega pra não pular o layout da seção ao redor. size="split" (calendário e
+// horários lado a lado) foi o preset escolhido pra caber na coluna estreita ao lado de
+// "Informações de Contato" — ver docs/AGENDA-WIDGET.md.
 export function AgendaWidget() {
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
 
@@ -59,7 +61,7 @@ export function AgendaWidget() {
       ) : status === 'error' ? (
         <FallbackNotice message="Não foi possível carregar a agenda online agora." />
       ) : (
-        <api111-agenda professional={AGENDA_PROFESSIONAL_ID} theme="light" />
+        <api111-agenda professional={AGENDA_PROFESSIONAL_ID} theme="light" size="split" />
       )}
     </div>
   );
