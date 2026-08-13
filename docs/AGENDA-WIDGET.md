@@ -80,8 +80,15 @@ de propósito.
   do CRM (rota estática bloqueada por middleware de login) que só apareceu testando de verdade, não
   no code review.
 
-## Estado dos deploys
+## Estado dos deploys — ATUALIZADO 13/08/2026
 
-Ver o spec doc no monorepo do CRM (caminho no topo deste arquivo) pra status atualizado dos
-deploys de produção dos dois lados (CRM e este site) — evitar duplicar aqui e desatualizar em um
+**Já está em produção**, `www.drsamuelholder.com.br` (aliasado manualmente via `vercel alias set`
+— o alias não seguiu automático pro deployment novo, precisou do comando explícito depois do
+`vercel --prod`). Confirmado com navegador real: seção "Escolha o Melhor Horário" presente,
+widget carregando dado real do CRM, sem erro no console.
+
+**⚠️ Importante**: isto foi deployado via CLI direto (`vercel --prod --token`), **não** via merge
+em `origin/main` — a branch `feat/agenda-widget-embed` continua sem merge. Produção está à frente
+do que `git log origin/main` mostra. Ver o spec doc no monorepo do CRM (caminho no topo deste
+arquivo) pra mais detalhe (IDs de deployment, etc.) — evitar duplicar aqui e desatualizar em um
 lugar só.
