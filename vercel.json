@@ -1,5 +1,8 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/((?!llms\\.txt).*)",
+      "destination": "/index.html"
+    }
   ]
 }

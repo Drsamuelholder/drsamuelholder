@@ -1,4 +1,10 @@
-User-agent: *
+User-agent: Googlebot
 Allow: /
 
-Sitemap: https://drsamuelholder.com.br/sitemap.xml
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: *
+Disallow: /
+
+Sitemap: https://www.drsamuelholder.com.br/sitemap.xml
